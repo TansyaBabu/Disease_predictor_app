@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prediction Results for {{ symptom_query_display }}</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      overflow: hidden;
+      min-height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+
+    /* Background image (no animation) */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url("./static/med5.png") center/cover no-repeat;
+      filter: blur(5px) brightness(0.78);
+      opacity: 0.9;
+      z-index: -1;
+    }
+
+    /* Scrollable result card */
+    .result-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 1.2rem;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .result-card::-webkit-scrollbar { width: 6px; }
+    .result-card::-webkit-scrollbar-thumb {
+      background: rgba(6,182,212,0.5);
+      border-radius: 10px;
+    }
+    .result-card::-webkit-scrollbar-thumb:hover {
+      background: rgba(6,182,212,0.7);
+    }
+
+    .logo-img {
+      width: 110px;
+      height: auto;
+      margin: 0 auto 12px auto;
+      display: block;
+    }
+
+    /* Bigger title text */
+    .text-4xl {
+      font-size: 2.5rem;
+      line-height: 2.5rem;
+    }
+  </style>
+</head>
+
+<body class="p-0 m-0">
+
+  <!-- CENTERING WRAPPER -->
+  <div class="fixed inset-0 flex items-center justify-center px-4 sm:px-8">
+    <div>
+
+      <!-- RESULT CARD -->
+<div class="result-card max-w-2xl mx-auto p-8 md:p-10">
+
+        <!-- LOGO (centered) -->
+        <img 
+          src="./static/med_logo1.png"
+          alt="Medical Logo"
+          class="logo-img"
+        />
+
+        <!-- TITLE (centered) -->
+        <h1 class="text-4xl font-bold text-cyan-600 mb-6 border-b pb-2 text-center">
+          SYMPTOMA : Medical Insights
+        </h1>
+
+        <!-- SUBTITLE (left-aligned) -->
+        <h2 class="text-xl font-medium text-cyan-600 mb-8">
+          Analysis for:
+          <span class="text-cyan-800 font-bold">{{ symptom_query_display | title }}</span>
+        </h2>
+
+        <!-- BUTTON (left-aligned) -->
+        <p class="text-sm mb-10">
+          <a href="/"
+             class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full shadow-md text-white bg-cyan-600 hover:bg-cyan-700 transition">
+            ← New Search
+          </a>
+        </p>
+
+        {% if error %}
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg">
+          <p class="font-bold">Error</p>
+          <p>{{ error }}</p>
+        </div>
+        {% else %}
+
+        <!-- SECTION 1 -->
+        <div class="mb-12 p-6 bg-cyan-50 rounded-xl shadow-md border border-cyan-100">
+          <h2 class="text-2xl font-bold text-cyan-700 mb-4 pb-2 border-b border-cyan-200">
+            Direct Disease Association
+          </h2>
+
+          {% if diseases %}
+          <ul class="space-y-2">
+            {% for disease in diseases %}
+            <li class="font-semibold text-lg text-cyan-800 bg-cyan-100 p-3 rounded-lg shadow-inner">
+              {{ disease }}
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-gray-600 italic">No direct single-symptom associations found.</p>
+          {% endif %}
+        </div>
+
+        <!-- SECTION 2 -->
+        <div class="mb-12 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+          <h2 class="text-2xl font-bold text-cyan-700 mb-4 pb-2 border-b border-cyan-200">
+            Multi-Symptom Disease Predictions
+          </h2>
+
+          {% if predicted_diseases %}
+          <ul class="space-y-4">
+            {% for rule in predicted_diseases %}
+            <li class="p-4 bg-green-50 border-l-8 border-cyan-500 rounded-lg shadow-md">
+              <span class="flex flex-col sm:flex-row sm:items-center text-lg">
+                <strong class="text-cyan-700">{{ rule.antecedents | title }}</strong>
+                <span class="mx-3 text-cyan-500 font-extrabold text-xl">→</span>
+                <strong class="text-cyan-700">{{ rule.consequents | title }}</strong>
+              </span>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-gray-600 italic">No multi-symptom disease patterns found.</p>
+          {% endif %}
+        </div>
+
+        <!-- SECTION 3 -->
+        <div class="p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+          <h2 class="text-2xl font-bold text-cyan-700 mb-4 pb-2 border-b border-cyan-200">
+            Multi-Symptom Suggestions
+          </h2>
+
+          {% if related_rules %}
+          <ul class="space-y-4">
+            {% for rule in related_rules %}
+            <li class="p-4 bg-yellow-50 border-l-8 border-yellow-400 rounded-lg shadow-md">
+              <span class="flex flex-col sm:flex-row sm:items-center text-lg">
+                <strong class="text-cyan-700">{{ rule.antecedents | title }}</strong>
+                <span class="mx-3 text-yellow-500 font-extrabold text-xl">→</span>
+                <strong class="text-yellow-600">{{ rule.consequents | title }}</strong>
+              </span>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-gray-600 italic">No related symptom patterns found.</p>
+          {% endif %}
+        </div>
+
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
