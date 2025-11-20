@@ -1,5 +1,5 @@
 ⚕️ Medical Symptom Analyzer or Medical Diagnosis Assistant (Flask & Apriori)
-
+SYMPTOMA
 💡 Overview
 
 The Medical Symptom Analyzer is a web application built using Flask that utilizes Association Rule Mining (Apriori Algorithm) to analyze a dataset of diseases and their associated symptoms.
