@@ -87,7 +87,7 @@ Step 5: Access the Application
 
 Open your web browser and navigate to:
 
-(https://disease-predictor-rexj.onrender.com/)
+(https://disease-predictor-app-tzms.onrender.com/)
 
 
 ⚙️ The Apriori Algorithm
