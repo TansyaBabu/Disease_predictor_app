@@ -92,7 +92,7 @@ Open your web browser and navigate to:
 
 ⚙️ The Apriori Algorithm
 
-The Apriori algorithm is used here to find frequent itemsets and derive rules from the combined set of symptoms and diseases.
+The Apriori algorithm is used here to find frequent itemsets and derive rules(to implement association rule mining) from the combined set of symptoms and diseases.
 
 Key Metrics:
 
